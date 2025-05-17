@@ -20,25 +20,38 @@ class Game:
         self.camera_movement_y = [False, False] #Down-Up
         self.camera_velocity = 6
 
+        self.MAPTILE_SIZE = (256, 256)
+        self.BACKGROUND_COLOR = (255, 255, 255)
+        self.BACKGROUND_SIZE = self.MAPTILE_SIZE[0] * 64
+
         # self.player = pygame.rect.Rect(5, 5, 1, 1)
-        self.player = pygame.image.load("costume2.png").convert()
+        self.images = {
+            "player" : pygame.image.load("costume2.png").convert(),
+            "maptile" : pygame.image.load("maptile.png").convert(),
+            "shadow" : pygame.image.load("shadow.png"),
+        }
 
     def update_camera(self):
         self.camera_pos[0] += (self.camera_movement_x[1] - self.camera_movement_x[0]) * self.camera_velocity
         self.camera_pos[1] += (self.camera_movement_y[1] - self.camera_movement_y[0]) * self.camera_velocity
 
-
     def main(self):
         while self.run:
-            self.screen.fill((0,0,0))
+            self.screen.fill(self.BACKGROUND_COLOR)
             self.clock.tick(60)
 
             # self.mouse_clicked = pygame.mouse.get_pressed()
             # if self.mouse_clicked[0] == True:
 
             self.mouse_pos = pygame.mouse.get_pos()
-            
+            cell_size = 8
+            self.shadow_pos = (((round(self.mouse_pos[0]/cell_size))*8, round(self.mouse_pos[1]/cell_size)*8))
 
+            for y in range(-self.BACKGROUND_SIZE, self.BACKGROUND_SIZE, self.BACKGROUND_SIZE):
+                for x in range(-self.BACKGROUND_SIZE, self.BACKGROUND_SIZE, self.BACKGROUND_SIZE):
+                    self.screen.blit(self.images["maptile"], (x - self.camera_position[0], y - self.camera_position[1]))
+
+                
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -64,7 +77,8 @@ class Game:
                     if event.key == pygame.K_UP:
                         self.camera_movement_y[1] = False
             self.update_camera()
-            self.screen.blit(self.player, (self.camera_pos[0], self.camera_pos[1]))
+            self.screen.blit(self.images["player"], (self.camera_pos[0], self.camera_pos[1]))
+            self.screen.blit()
 
             pygame.display.update()
 
