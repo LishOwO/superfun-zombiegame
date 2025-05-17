@@ -18,7 +18,7 @@ class Game:
         self.camera_pos = [0, 0]
         self.camera_movement_x = [False, False] #Left-Right
         self.camera_movement_y = [False, False] #Down-Up
-        self.camera_velocity = 3
+        self.camera_velocity = 6
 
         # self.player = pygame.rect.Rect(5, 5, 1, 1)
         self.player = pygame.image.load("costume2.png").convert()
@@ -27,10 +27,18 @@ class Game:
         self.camera_pos[0] += (self.camera_movement_x[1] - self.camera_movement_x[0]) * self.camera_velocity
         self.camera_pos[1] += (self.camera_movement_y[1] - self.camera_movement_y[0]) * self.camera_velocity
 
+
     def main(self):
         while self.run:
             self.screen.fill((0,0,0))
             self.clock.tick(60)
+
+            # self.mouse_clicked = pygame.mouse.get_pressed()
+            # if self.mouse_clicked[0] == True:
+
+            self.mouse_pos = pygame.mouse.get_pos()
+            
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
