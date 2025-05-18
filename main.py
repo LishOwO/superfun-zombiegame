@@ -12,6 +12,7 @@ class Game:
         self.SCREEN_HEIGHT = 600
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.run = True
+        self.initial_load = False
         pygame.display.set_caption("Zombie Game")
 
         self.clock = pygame.time.Clock()
@@ -20,14 +21,16 @@ class Game:
         self.camera_movement_y = [False, False] #Down-Up
         self.camera_velocity = 6
 
-        self.MAPTILE_SIZE = (256, 256)
+
+        self.MAPTILE_SIZE = 256
+        self.BACKGROUND_TILE_SIZE = (self.MAPTILE_SIZE, self.MAPTILE_SIZE)
         self.BACKGROUND_COLOR = (255, 255, 255)
-        self.BACKGROUND_SIZE = self.MAPTILE_SIZE[0] * 64
+        self.BACKGROUND_SIZE = self.MAPTILE_SIZE ** 2
 
         # self.player = pygame.rect.Rect(5, 5, 1, 1)
         self.images = {
             "player" : pygame.image.load("costume2.png").convert(),
-            "maptile" : pygame.image.load("maptile.png").convert(),
+            "background_tile" : pygame.image.load("maptile.png").convert(),
             "shadow" : pygame.image.load("shadow.png"),
         }
 
@@ -35,11 +38,18 @@ class Game:
         self.camera_pos[0] += (self.camera_movement_x[1] - self.camera_movement_x[0]) * self.camera_velocity
         self.camera_pos[1] += (self.camera_movement_y[1] - self.camera_movement_y[0]) * self.camera_velocity
 
+    def load_background(self):
+        for x in range(-self.BACKGROUND_SIZE, self.BACKGROUND_SIZE, self.BACKGROUND_SIZE):
+            for y in range(-self.BACKGROUND_SIZE, self.BACKGROUND_SIZE, self.BACKGROUND_SIZE):
+                self.screen.blit(self.images["background_tile"], (x,y))
     def main(self):
         while self.run:
             self.screen.fill(self.BACKGROUND_COLOR)
             self.clock.tick(60)
+            self.load_background()
 
+            if not self.initial_load:
+                self.initial_load = True
             # self.mouse_clicked = pygame.mouse.get_pressed()
             # if self.mouse_clicked[0] == True:
 
@@ -47,11 +57,8 @@ class Game:
             cell_size = 8
             self.shadow_pos = (((round(self.mouse_pos[0]/cell_size))*8, round(self.mouse_pos[1]/cell_size)*8))
 
-            for y in range(-self.BACKGROUND_SIZE, self.BACKGROUND_SIZE, self.BACKGROUND_SIZE):
-                for x in range(-self.BACKGROUND_SIZE, self.BACKGROUND_SIZE, self.BACKGROUND_SIZE):
-                    self.screen.blit(self.images["maptile"], (x - self.camera_position[0], y - self.camera_position[1]))
 
-                
+
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -78,7 +85,6 @@ class Game:
                         self.camera_movement_y[1] = False
             self.update_camera()
             self.screen.blit(self.images["player"], (self.camera_pos[0], self.camera_pos[1]))
-            self.screen.blit()
 
             pygame.display.update()
 
