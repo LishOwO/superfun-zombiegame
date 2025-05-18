@@ -6,8 +6,8 @@ pygame.init()
 
 class Game:
     def __init__(self):
-        self.SCREEN_WIDTH = 1400
-        self.SCREEN_HEIGHT = 768
+        self.SCREEN_WIDTH = 256*3
+        self.SCREEN_HEIGHT = 256*3
         self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         self.run = True
         self.initial_load = False
@@ -18,7 +18,11 @@ class Game:
             "player" : pygame.image.load("costume2.png").convert(),
             "background_tile" : pygame.image.load("maptile.png").convert(),
             "shadow" : pygame.image.load("shadow.png").convert(),
+            "other" : pygame.image.load("other.png"),
         }
+
+        for i in range (10):
+            self.images[f"{i}"] = pygame.image.load(f"{i}.png")
 
         self.clock = pygame.time.Clock()
         self.camera_pos = [0, 0]
@@ -58,8 +62,27 @@ class Game:
 
         for x in range(minimum_coords[0], max_coords_x+1, self.MAPTILE_SIZE):
             for y in range(minimum_coords[1], max_coords_y+1, self.MAPTILE_SIZE):
-                self.screen.blit(self.images["background_tile"], (camera_position_x - x, camera_position_y - y))
+                self.screen.blit(self.images["background_tile"], (camera_position_x - x + 256*1.5, camera_position_y - y + 256*1.5))
+        # + 256*1.5 des deux cotés
 
+        # camera_position_x, camera_position_y = camera_position
+        # init_alpha_pos = floor(camera_position_x/self.MAPTILE_SIZE) - floor(camera_position_y/self.MAPTILE_SIZE) * 3
+        # print("camera position:", camera_position, init_alpha_pos)
+
+        # rel_y = -(3-1)/2
+        # for y in range(3):
+        #     rel_x = -(3-1)/2
+        #     for x in range(3):
+        #         alpha_pos = round(init_alpha_pos + rel_x - rel_y* 3)
+        #         x = camera_position_x-rel_x*self.MAPTILE_SIZE
+        #         y = camera_position_y+rel_y*self.MAPTILE_SIZE
+        #         # self.screen.blit(self.images["background_tile"], ((x%self.MAPTILE_SIZE*1.5), (y%self.MAPTILE_SIZE*1.5)))
+        #         self.screen.blit(self.images["background_tile"], (-x, -y))
+        #         if alpha_pos > -1 and alpha_pos < 10:
+        #             self.screen.blit(self.images[str(alpha_pos)], (-x, -y))
+
+        #         rel_x += 1
+        #     rel_y -= 1
 
 
     def main(self):
